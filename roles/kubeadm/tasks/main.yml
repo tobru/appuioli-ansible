@@ -70,3 +70,4 @@
     enabled: yes
   register: kubelet_poke
   when: kubeletsrv_configuration|changed
+
