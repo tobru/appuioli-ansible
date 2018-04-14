@@ -1,10 +1,6 @@
 ---
 # tasks file for kubeadm
 
-# https://gist.github.com/alexellis/fdbc90de7691a1b9edb545c17da2d975
-- name: Disable Swap
-  shell: dphys-swapfile swapoff && dphys-swapfile uninstall && update-rc.d dphys-swapfile remove
-
 # Docker Convenience Script Can Only Be Run Once
 - name: Determine if docker is installed
   stat:
@@ -16,6 +12,12 @@
 - name: Run Docker Install Script
   script: files/get-docker.sh
   when: docker_there.stat.exists == False
+
+- name: Add Ansible User to Docker Group
+  user:
+    name: ansible
+    groups: docker
+    append: yes
 
 # https://kubernetes.io/docs/setup/independent/install-kubeadm/
 - name: Install apt-transport-https
@@ -40,10 +42,15 @@
     autoclean: yes
     autoremove: yes
 
+- name: Pin Kubernetes Version
+  template:
+    src: templates/apt-preferences
+    dest: /etc/apt/preferences.d/k8s
+
 - name: Install k8s Y'all
   apt:
     name: "{{ item }}"
-    state: latest
+    state: installed
   with_items:
     - kubelet
     - kubeadm

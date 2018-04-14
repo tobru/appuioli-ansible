@@ -1,21 +1,18 @@
 ---
 # tasks file for common
-- name: Enabling cgroup options at boot
-  copy:
-    src: cmdline.txt
-    dest: /boot/cmdline.txt
-    owner: root
-    group: root
-    mode: 0755
+- name: Enabling cgroup options at boot - Armbian
+  lineinfile:
+    dest: /boot/armbianEnv.txt
+    line: 'extraargs=cgroup_enable=cpuset cgroup_enable=memory'
   register: cmdline
   tags:
     - boot
 
-- name: Pass bridged IPv4 traffic to iptables' chains
-  sysctl:
-    name: net.bridge.bridge-nf-call-iptables
-    value: 1
-    state: present
+- name: Use Armbian beta package channel
+  replace:
+    dest: /etc/apt/sources.list.d/armbian.list
+    regexp: '(.*)apt(.*)'
+    replace: '\1beta\2'
 
 - name: apt-get update
   apt:
@@ -29,7 +26,7 @@
     upgrade=full
 
 - name: Reboot
-  shell: sleep 2 && shutdown -r now "Ansible Reboot for /boot/cmdline.txt Change"
+  shell: sleep 2 && shutdown -r now "Ansible Reboot for Kernel cmdline Change"
   async: 1
   poll: 0
   ignore_errors: True
