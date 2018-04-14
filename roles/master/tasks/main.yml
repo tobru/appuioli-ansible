@@ -5,7 +5,7 @@
   register: kubeadm_reset
 
 - name: Initialize Master
-  shell: kubeadm init --apiserver-advertise-address={{ ansible_default_ipv4.address }} --token={{ token }}
+  shell: kubeadm init --apiserver-advertise-address={{ ansible_default_ipv4.address }} --token={{ token }} --ignore-preflight-errors=Swap
   register: kubeadm_init
   when: kubeadm_reset|succeeded
 

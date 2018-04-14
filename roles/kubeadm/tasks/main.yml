@@ -55,3 +55,18 @@
     - kubelet
     - kubeadm
     - kubectl
+
+- name: Configure kubelet to allow Swap
+  copy:
+    src: files/90-local-extras.conf
+    dest: /etc/systemd/system/kubelet.service.d/90-local-extras.conf
+  register: kubeletsrv_configuration
+
+- name: Poke kubelet
+  systemd:
+    name: kubelet
+    state: restarted
+    daemon_reload: yes
+    enabled: yes
+  register: kubelet_poke
+  when: kubeletsrv_configuration|changed
