@@ -1,9 +1,15 @@
 ---
 # tasks file for common
+- name: Detect Armbian
+  stat:
+    path: /boot/armbianEnv.txt
+  register: armbian_env
+
 - name: Enabling cgroup options at boot - Armbian
   lineinfile:
     dest: /boot/armbianEnv.txt
     line: 'extraargs=cgroup_enable=cpuset cgroup_enable=memory'
+  when: armbian_env.stat.exists == True
   register: needs_reboot
   tags:
     - boot
@@ -13,6 +19,7 @@
     dest: /etc/apt/sources.list.d/armbian.list
     regexp: '(.*)apt(.*)'
     replace: '\1beta\2'
+  when: armbian_env.stat.exists == True
 
 - name: apt-get update
   apt:

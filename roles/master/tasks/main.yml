@@ -5,7 +5,10 @@
   register: kubeadm_reset
 
 - name: Initialize Master
-  shell: kubeadm init --apiserver-advertise-address={{ ansible_default_ipv4.address }} --token={{ token }} --ignore-preflight-errors=Swap
+  shell: >
+    kubeadm init --apiserver-advertise-address={{ ansible_default_ipv4.address }}
+    --token={{ token }} --ignore-preflight-errors=Swap
+    --pod-network-cidr=10.244.0.0/16
   register: kubeadm_init
   when: kubeadm_reset|succeeded
 
@@ -32,8 +35,13 @@
   when: kubeadm_reset|succeeded
   register: kubeadm_join
 
-- name: Install Weave (Networking)
-  shell: kubectl apply -f https://git.io/weave-kube-1.6
+- name: Copy Flannel manifest
+  copy:
+    src: files/kube-flannel.yml
+    dest: /tmp/kube-flannel.yml
+
+- name: Install Flannel (Networking)
+  shell: kubectl apply -f /tmp/kube-flannel.yml
 
 - name: Poke kubelet
   systemd:

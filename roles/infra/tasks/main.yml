@@ -1,0 +1,27 @@
+---
+# tasks file for infra pi
+
+- name: Determine if Pi-hole is installed
+  stat:
+    path: /usr/bin/pihole-FTL
+  register: pihole_there
+  ignore_errors: True
+
+- name: Run Pi-hole Install Script
+  script: files/pihole.sh
+  when: pihole_there.stat.exists == False
+
+- name: Install infra tools
+  apt:
+    name: "{{ item }}"
+    state: installed
+  with_items:
+    - ansible
+    - autossh
+    - git
+    - matchbox-keyboard
+    - nmap
+    - tcpdump
+    - tmate
+    - vim
+    - vlan
