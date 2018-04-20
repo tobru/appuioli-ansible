@@ -1,0 +1,10 @@
+[Unit]
+Description=AutoSSH phone home service
+After=network.target
+
+[Service]
+Environment="AUTOSSH_GATETIME=0"
+ExecStart=/usr/bin/autossh -M 0 -NR {{ phone_home_listen }}:localhost:22 -o TCPKeepAlive=yes -i /etc/ssh/phonehome_key {{ phone_home_ssh_user }}@{{ phone_home_ssh_host }}
+
+[Install]
+WantedBy=multi-user.target

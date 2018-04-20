@@ -11,7 +11,7 @@
   script: files/pihole.sh
   when: pihole_there.stat.exists == False
 
-- name: Install infra tools
+- name: Install packages
   apt:
     name: "{{ item }}"
     state: installed
@@ -19,9 +19,76 @@
     - ansible
     - autossh
     - git
-    - matchbox-keyboard
+    - iptables-persistent
+      # - matchbox-keyboard
     - nmap
     - tcpdump
     - tmate
     - vim
     - vlan
+
+# This is a very static configuration and meant for this specific use-case
+# Could be done more dynamic with https://docs.ansible.com/ansible/2.4/interfaces_file_module.html
+# introduced in Ansible 2.4
+- name: Add and configure VLAN interfaces
+  copy:
+    src: files/interfaces
+    dest: /etc/network/interfaces
+
+- name: Configure NAT / Masquerading
+  iptables:
+    table: nat
+    chain: POSTROUTING
+    out_interface: vlan20
+    jump: MASQUERADE
+
+- name: Configure packet forwarding between vlan 20 and 30
+  iptables:
+    table: filter
+    chain: FORWARD
+    in_interface: vlan20
+    out_interface: vlan30
+    ctstate: RELATED,ESTABLISHED
+    jump: ACCEPT
+
+- name: Allow from vlan 30 to vlan 20
+  iptables:
+    table: filter
+    chain: FORWARD
+    in_interface: vlan30
+    out_interface: vlan20
+    jump: ACCEPT
+
+- name: Enable routing
+  sysctl:
+    name: net.ipv4.ip_forward
+    value: 1
+    state: present
+    sysctl_set: yes
+
+- name: Configure AutoSSH for phone home
+  template:
+    src: templates/autossh_phonehome.service
+    dest: /etc/systemd/system/autossh_phonehome.service
+  register: autossh_systemd_unit
+
+- name: Generate SSH Key
+  shell: ssh-keygen -b 2048 -t rsa -f /etc/ssh/phonehome_key -q -N "" -C "APPUiOli Management Node"
+  args:
+    creates: /etc/ssh/phonehome_key
+
+- name: Store SSH public key
+  command: /bin/cat /etc/ssh/phonehome_key.pub
+  register: ssh_pub_key
+
+- name: Show SSH public key
+  debug:
+    var: ssh_pub_key.stdout_lines
+
+- name: Restart AutoSSH Service
+  systemd:
+    name: autossh_phonehome.service
+    daemon_reload: yes
+    state: restarted
+    enabled: yes
+  when: autossh_systemd_unit|changed
