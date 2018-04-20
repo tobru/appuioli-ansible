@@ -20,7 +20,7 @@
     - autossh
     - git
     - iptables-persistent
-      # - matchbox-keyboard
+    - matchbox-keyboard
     - nmap
     - tcpdump
     - tmate
