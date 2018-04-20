@@ -4,6 +4,8 @@
   shell: kubeadm reset
   register: kubeadm_reset
   when: reset_kubeadm | default('no') | bool
+  tags:
+    - kubeadm
 
 - name: Initialize Master
   shell: >
@@ -14,6 +16,8 @@
   when:
     - kubeadm_reset | succeeded
     - reset_kubeadm | default('no') | bool
+  tags:
+    - kubeadm
 
 - name: Create Kubernetes config directory
   file:
@@ -38,7 +42,6 @@
     src: /etc/kubernetes/admin.conf
     dest: ~/.kube/admin.conf
     flat: yes
-  when: kubeadm_init
 
 - name: Join Kubernetes Cluster
   shell: kubeadm join --ignore-preflight-errors=all --token {{ token }} {{ groups['master'][0] }}:6443 --discovery-token-unsafe-skip-ca-verification

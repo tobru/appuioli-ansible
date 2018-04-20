@@ -20,11 +20,15 @@
     regexp: '(.*)apt(.*)'
     replace: '\1beta\2'
   when: armbian_env.stat.exists == True
+  tags:
+    - pkgmgr
 
 - name: Install apt-transport-https
   apt:
     name: apt-transport-https
     state: latest
+  tags:
+    - pkgmgr
 
 - name: Add Google Cloud Repo Key
   shell: curl -s https://packages.cloud.google.com/apt/doc/apt-key.gpg | apt-key add -
@@ -36,16 +40,22 @@
     owner: root
     group: root
     mode: 0644
+  tags:
+    - pkgmgr
 
 - name: apt-get update
   apt:
     update_cache=yes
     autoclean=yes
     autoremove=yes
+  tags:
+    - pkgmgr
 
 - name: apt-get upgrade
   apt:
     upgrade=full
+  tags:
+    - pkgmgr
 
 - name: Pin Kubernetes Version
   template:
