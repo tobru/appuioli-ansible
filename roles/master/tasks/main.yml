@@ -33,10 +33,11 @@
     remote_src: yes
   when: kubeadm_init
 
-- name: Copy admin.conf to management
+- name: Copy admin.conf to infra node
   fetch:
     src: /etc/kubernetes/admin.conf
     dest: ~/.kube/admin.conf
+    flat: yes
   when: kubeadm_init
 
 - name: Join Kubernetes Cluster
