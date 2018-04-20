@@ -20,7 +20,6 @@
   with_items:
     - ansible
     - autossh
-    - conky
     - git
     - iptables-persistent
     - matchbox-keyboard
@@ -61,6 +60,9 @@
     in_interface: vlan30
     out_interface: vlan20
     jump: ACCEPT
+
+- name: Persist IPTables
+  command: netfilter-persistent save
 
 - name: Enable routing
   sysctl:
