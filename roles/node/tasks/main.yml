@@ -3,11 +3,15 @@
 - name: Reset Kubernetes
   shell: kubeadm reset
   register: kubeadm_reset
+  when:
+    - reset_kubeadm | default('no') | bool
 
 - name: Join Kubernetes Cluster
   shell: kubeadm join --ignore-preflight-errors=all --token {{ token }} {{ groups['master'][0] }}:6443 --discovery-token-unsafe-skip-ca-verification
-  when: kubeadm_reset|succeeded
   register: kubeadm_join
+  when:
+    - kubeadm_reset | succeeded
+    - reset_kubeadm | default('no') | bool
 
 - name: Poke kubelet
   systemd:
@@ -16,3 +20,4 @@
     daemon_reload: yes
     enabled: yes
   register: kubelet_poke
+  when: kubeadm_join | succeeded

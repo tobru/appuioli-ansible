@@ -71,6 +71,9 @@
     src: templates/autossh_phonehome.service
     dest: /etc/systemd/system/autossh_phonehome.service
   register: autossh_systemd_unit
+  when:
+   - phone_home_ssh_user is defined
+   - phone_home_ssh_host is defined
 
 - name: Generate SSH Key
   shell: ssh-keygen -b 2048 -t rsa -f /etc/ssh/phonehome_key -q -N "" -C "APPUiOli Management Node"

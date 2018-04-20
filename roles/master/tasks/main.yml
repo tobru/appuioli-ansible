@@ -3,6 +3,7 @@
 - name: Reset Kubernetes Master
   shell: kubeadm reset
   register: kubeadm_reset
+  when: reset_kubeadm | default('no') | bool
 
 - name: Initialize Master
   shell: >
@@ -10,7 +11,9 @@
     --token={{ token }} --ignore-preflight-errors=Swap
     --pod-network-cidr=10.244.0.0/16
   register: kubeadm_init
-  when: kubeadm_reset|succeeded
+  when:
+    - kubeadm_reset | succeeded
+    - reset_kubeadm | default('no') | bool
 
 - name: Create Kubernetes config directory
   file:
@@ -30,10 +33,18 @@
     remote_src: yes
   when: kubeadm_init
 
+- name: Copy admin.conf to management
+  fetch:
+    src: /etc/kubernetes/admin.conf
+    dest: ~/.kube/admin.conf
+  when: kubeadm_init
+
 - name: Join Kubernetes Cluster
   shell: kubeadm join --ignore-preflight-errors=all --token {{ token }} {{ groups['master'][0] }}:6443 --discovery-token-unsafe-skip-ca-verification
   when: kubeadm_reset|succeeded
-  register: kubeadm_join
+  when:
+    - kubeadm_reset | succeeded
+    - reset_kubeadm | default('no') | bool
 
 - name: Copy Flannel manifest
   copy:

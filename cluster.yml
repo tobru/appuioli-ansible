@@ -2,8 +2,9 @@
   roles:
     - common
 
-- hosts: all:!infra
+- hosts: master:node
   roles:
+    - docker
     - kubeadm
 
 - hosts: master
@@ -11,6 +12,6 @@
     - master
     - dashboard
 
-- hosts: all:!master
+- hosts: node
   roles:
-    - workers
+    - node

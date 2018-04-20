@@ -1,3 +1,4 @@
 token: udy29x.ugyyk3tumg27atmr
 podnet: 10.244.0.0/16
 kubernetes_version: 1.9*
+phone_home_listen: 2223
