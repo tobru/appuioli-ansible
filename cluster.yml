@@ -1,17 +1,21 @@
 - hosts: all
+  name: Configure common stuff
   roles:
     - common
 
 - hosts: master:node
+  name: Prepare master and nodes
   roles:
     - docker
     - kubeadm
 
 - hosts: master
+  name: Install master and K8s components
   roles:
     - master
     - dashboard
 
 - hosts: node
+  name: Install nodes
   roles:
     - node

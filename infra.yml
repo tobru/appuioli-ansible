@@ -1,3 +1,4 @@
 - hosts: infra
+  name: Configure Infra Node
   roles:
     - infra

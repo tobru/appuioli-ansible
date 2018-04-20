@@ -41,7 +41,6 @@
 
 - name: Join Kubernetes Cluster
   shell: kubeadm join --ignore-preflight-errors=all --token {{ token }} {{ groups['master'][0] }}:6443 --discovery-token-unsafe-skip-ca-verification
-  when: kubeadm_reset|succeeded
   when:
     - kubeadm_reset | succeeded
     - reset_kubeadm | default('no') | bool
