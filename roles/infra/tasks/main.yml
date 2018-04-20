@@ -7,6 +7,8 @@
   register: pihole_there
   ignore_errors: True
 
+# TODO: prefill /etc/pihole/setupVars.conf and run with --unattended
+# See https://discourse.pi-hole.net/t/what-is-setupvars-conf-and-how-do-i-use-it/3533
 - name: Run Pi-hole Install Script
   script: files/pihole.sh
   when: pihole_there.stat.exists == False
