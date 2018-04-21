@@ -1,0 +1,5 @@
+- hosts: master
+  name: Install Kubernetes Apps
+  roles:
+    - dashboard
+    - helm

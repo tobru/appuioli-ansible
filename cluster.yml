@@ -10,12 +10,11 @@
     - kubeadm
 
 - hosts: master
-  name: Install master and K8s components
+  name: Bootstrap cluster
   roles:
     - master
-    - dashboard
 
 - hosts: node
-  name: Install nodes
+  name: Join nodes
   roles:
     - node

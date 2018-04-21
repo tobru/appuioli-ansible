@@ -2,3 +2,4 @@
   name: Configure Infra Node
   roles:
     - infra
+    - helm

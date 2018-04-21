@@ -20,6 +20,7 @@
   with_items:
     - ansible
     - autossh
+    - conky-std
     - git
     - iptables-persistent
     - matchbox-keyboard

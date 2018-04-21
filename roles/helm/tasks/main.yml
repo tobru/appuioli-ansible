@@ -1,0 +1,16 @@
+---
+- name: Determine if Helm is installed
+  stat:
+    path: /usr/local/bin/helm
+  register: helm_there
+  ignore_errors: True
+
+- name: Run Helm Install Script
+  script: files/get_helm.sh
+  when: helm_there.stat.exists == False
+  register: install_helm
+
+  # TODO provide updated tiller image for arm64
+- name: Initialize Tiller
+  command: helm init --tiller-image=luxas/tiller-arm64:v2.6.1
+  when: install_helm | changed
