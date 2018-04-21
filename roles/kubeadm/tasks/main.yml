@@ -3,9 +3,10 @@
   apt:
     name: "{{ item }}"
     state: installed
+    force: yes
   with_items:
-    - kubelet
-    - kubeadm
+    - kubelet={{ kubernetes_version }}
+    - kubeadm={{ kubernetes_version }}
 
 - name: Configure kubelet to allow Swap
   copy:

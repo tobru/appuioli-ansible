@@ -32,6 +32,8 @@
 
 - name: Add Google Cloud Repo Key
   shell: curl -s https://packages.cloud.google.com/apt/doc/apt-key.gpg | apt-key add -
+  tags:
+    - pkgmgr
 
 - name: Add Kubernetes to Available apt Sources
   template:
@@ -42,6 +44,11 @@
     mode: 0644
   tags:
     - pkgmgr
+
+- name: Pin Kubernetes Version
+  template:
+    src: templates/apt-preferences
+    dest: /etc/apt/preferences.d/k8s
 
 - name: apt-get update
   apt:
@@ -57,15 +64,11 @@
   tags:
     - pkgmgr
 
-- name: Pin Kubernetes Version
-  template:
-    src: templates/apt-preferences
-    dest: /etc/apt/preferences.d/k8s
-
 - name: Install kubectl
   apt:
-    name: kubectl
+    name: kubectl={{ kubernetes_version }}
     state: installed
+    force: yes
 
 - name: Set hostname by DHCP
   copy:
