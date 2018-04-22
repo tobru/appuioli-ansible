@@ -1,11 +1,26 @@
 ---
-- name: Determine if Helm is installed
-  stat:
-    path: /usr/local/bin/helm
-  register: helm_there
-  ignore_errors: True
+#- name: Determine if Helm is installed
+#  stat:
+#    path: /usr/local/bin/helm
+#  register: helm_there
+#  ignore_errors: True
+#
+#- name: Install Traefik Ingress with Helm
+#  command: >
+#    helm install --namespace kube-system
+#    --set dashboard.enabled=true
+#    --set metrics.prometheus.enabled=true
+#    --set rbac.enabled=true
+#    --set deployment.hostPort.httpEnabled=true
+#    --set deployment.hostPort.httpsEnabled=true
+#    --set deployment.hostPort.dashboardEnabled=true
+#    stable/traefik
+#  when: helm_there.stat.exists == True
+- name: Copy Kubernetes Definitions
+  copy:
+    src: files/ds.yaml
+    dest: /tmp/traefik-ds.yaml
 
-- name: Install Traefik Ingress with Helm
+- name: Install Traefik Ingress as DaemonSet
   command: >
-    helm install stable/traefik
-  when: helm_there.stat.exists == True
+    kubectl apply -f /tmp/traefik-ds.yaml
