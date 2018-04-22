@@ -5,3 +5,4 @@
     - helm
     - rook
     - traefik
+    - kube-ops-view

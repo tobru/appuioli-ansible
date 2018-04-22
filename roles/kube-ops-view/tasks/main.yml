@@ -1,0 +1,14 @@
+---
+- name: Determine if Helm is installed
+  stat:
+    path: /usr/local/bin/helm
+  register: helm_there
+  ignore_errors: True
+
+- name: Install kube-ops-view with Helm
+  command: >
+    helm install --namespace kube-ops-view
+    --set ingress.enabled=true
+    --set rbac.create=true
+    stable/kube-ops-view
+  when: helm_there.stat.exists == True

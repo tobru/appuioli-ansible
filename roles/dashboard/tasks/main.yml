@@ -13,8 +13,11 @@
 - name: Restart dashboard Pod
   shell: kubectl -n kube-system delete $(kubectl -n kube-system get pod -o name | grep dashboard)
 
-- name: Fetch kubeconfig file
-  fetch:
-    src: /root/.kube/config
-    dest: ~/.kube/config
-    flat: yes
+- name: Copy Kubernetes Definitions
+  copy:
+    src: files/dashboard-ingress.yaml
+    dest: /tmp/dashboard-ingress.yaml
+
+- name: Configure Dashboard Ingress
+  command: >
+    kubectl apply -f /tmp/dashboard-ingress.yaml
