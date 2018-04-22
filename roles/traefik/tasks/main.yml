@@ -1,0 +1,11 @@
+---
+- name: Determine if Helm is installed
+  stat:
+    path: /usr/local/bin/helm
+  register: helm_there
+  ignore_errors: True
+
+- name: Install Traefik Ingress with Helm
+  command: >
+    helm install stable/traefik
+  when: helm_there.stat.exists == True

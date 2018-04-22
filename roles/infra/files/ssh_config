@@ -1,0 +1,3 @@
+Host node* master*
+  User ansible
+  IdentityFile ~/.ssh/id_rsa_ansible

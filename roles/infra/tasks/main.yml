@@ -101,3 +101,8 @@
     state: restarted
     enabled: yes
   when: autossh_systemd_unit|changed
+
+- name: Install SSH client config
+  copy:
+    src: files/ssh_config
+    dest: /home/pi/.ssh/config
