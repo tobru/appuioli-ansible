@@ -1,0 +1,20 @@
+---
+- name: Determine if Helm is installed
+  stat:
+    path: /usr/local/bin/helm
+  register: helm_there
+  ignore_errors: True
+
+  # TODO check if not already added
+- name: Add Rook Helm Chart Repository
+  command: >
+    helm repo add rook-alpha https://charts.rook.io/alpha
+  when: helm_there.stat.exists == True
+  register: repo
+
+- name: Install Rook Operator with Helm
+  command: >
+    helm install --namespace rook-system
+    --set agent.flexVolumeDirPath=/var/lib/kubelet/volumeplugins/,hyperkube.repository=k8s.gcr.io/hyperkube-arm64,hyperkube.tag=v1.9.7
+    rook-alpha/rook
+  when: repo | succeeded

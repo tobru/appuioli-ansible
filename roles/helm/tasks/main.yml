@@ -14,3 +14,11 @@
 - name: Initialize Tiller
   command: helm init --tiller-image=luxas/tiller-arm64:v2.6.1
   when: install_helm | changed
+  register: tiller
+
+- name: Tiller Permissions
+  shell: >
+    kubectl -n kube-system create serviceaccount tiller && \
+    kubectl -n kube-system patch deploy tiller-deploy -p '{"spec":{"template":{"spec":{"serviceAccountName":"tiller"}}}}' && \
+    kubectl create clusterrolebinding tiller --clusterrole cluster-admin --serviceaccount kube-system:tiller
+  when: tiller | changed
