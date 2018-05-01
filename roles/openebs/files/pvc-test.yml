@@ -1,0 +1,11 @@
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: openebstest
+spec:
+  storageClassName: openebs-standard
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 10G

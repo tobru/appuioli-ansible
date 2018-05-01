@@ -70,6 +70,13 @@
     state: installed
     force: yes
 
+- name: Install open-iscsi for OpenEBS
+  apt:
+    name: open-iscsi
+    state: latest
+  tags:
+    - pkgmgr
+
 - name: Set hostname by DHCP
   copy:
     src: files/sethostname

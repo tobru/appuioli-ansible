@@ -7,7 +7,10 @@
 
 - name: Install kube-ops-view with Helm
   command: >
-    helm install --namespace kube-ops-view
+    helm install --namespace kube-ops-view --name dashboard
+    --set image.repository=tobru/kube-ops-view-arm
+    --set image.tag=latest
+    --set image.pullPolicy=Always
     --set ingress.enabled=true
     --set rbac.create=true
     stable/kube-ops-view

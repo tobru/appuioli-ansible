@@ -11,6 +11,22 @@
   script: files/get-docker.sh
   when: docker_there.stat.exists == False
 
+- name: Configure Docker to use local Registry Mirror
+  copy:
+    src: files/daemon.json
+    dest: /etc/docker/daemon.json
+  register: dockerd_config
+  when:
+    - use_mirror is defined
+    - use_mirror == True
+
+- name: Restart Docker Daemon to apply configuration
+  service:
+    name: docker
+    state: restarted
+    enabled: yes
+  when: dockerd_config.changed
+
 - name: Add Ansible User to Docker Group
   user:
     name: ansible

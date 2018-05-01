@@ -8,7 +8,14 @@
     - kubelet={{ kubernetes_version }}
     - kubeadm={{ kubernetes_version }}
 
-- name: Configure kubelet to allow Swap
+- name: Install ceph-common for rook.io
+  apt:
+    name: ceph-common
+    state: latest
+  tags:
+    - pkgmgr
+
+- name: Customize kubelet configuration
   copy:
     src: files/90-local-extras.conf
     dest: /etc/systemd/system/kubelet.service.d/90-local-extras.conf

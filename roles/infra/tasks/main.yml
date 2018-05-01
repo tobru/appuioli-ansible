@@ -23,6 +23,7 @@
     - conky-std
     - git
     - iptables-persistent
+    - jq
     - matchbox-keyboard
     - nmap
     - tcpdump

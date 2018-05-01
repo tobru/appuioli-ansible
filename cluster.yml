@@ -5,6 +5,8 @@
 
 - hosts: master:node
   name: Prepare master and nodes
+  vars:
+    use_mirror: true
   roles:
     - docker
     - kubeadm

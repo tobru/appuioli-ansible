@@ -1,0 +1,12 @@
+apiVersion: openebs.io/v1alpha1
+kind: StoragePool
+metadata:
+    name: default
+    type: hostdir
+spec:
+    path: /mnt/openebs_disk
+    nodes:
+    - node3
+    - node4
+    - node5
+    maxVolSize: 5G

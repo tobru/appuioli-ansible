@@ -1,0 +1,16 @@
+apiVersion: ark.heptio.com/v1
+kind: Config
+metadata:
+  namespace: heptio-ark
+  name: default
+backupStorageProvider:
+  name: aws
+  bucket: ark
+  config:
+    region: zrh
+    s3ForcePathStyle: "true"
+    s3Url: https://objects.cloudscale.ch
+backupSyncPeriod: 30m
+gcSyncPeriod: 30m
+scheduleSyncPeriod: 1m
+restoreOnlyMode: false
