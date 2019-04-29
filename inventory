@@ -10,3 +10,8 @@ node2
 node3
 node4
 node5
+
+[k3s-cluster:children]
+master
+node
+

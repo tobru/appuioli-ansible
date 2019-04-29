@@ -1,0 +1,22 @@
+#- hosts: all
+#  name: Configure common stuff
+#  roles:
+#    - common
+
+- hosts: master:node
+  name: Prepare master and nodes
+  vars:
+    use_mirror: true
+  roles:
+    - docker
+    - k3s/download
+
+- hosts: master
+  name: Bootstrap cluster
+  roles:
+    - k3s/master
+
+- hosts: node:master
+  name: Join nodes
+  roles:
+    - k3s/node

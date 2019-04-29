@@ -1,0 +1,4 @@
+- hosts: master:node
+  name: Uninstall k3s on master and nodes
+  roles:
+    - k3s/uninstall

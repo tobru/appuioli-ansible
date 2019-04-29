@@ -1,0 +1,48 @@
+---
+- name: Stop K3s Node
+  systemd:
+    name: k3s-node
+    state: stopped
+    enabled: no
+  ignore_errors: yes
+
+- name: Stop K3s Master
+  systemd:
+    name: k3s-master
+    state: stopped
+    enabled: no
+  ignore_errors: yes
+
+- name: Restart Docker Daemon
+  systemd:
+    name: docker
+    state: restarted
+    enabled: yes
+
+- name: Delete K3s Systemd Master Service
+  file:
+    path: "{{ systemd_dir }}/k3s-master.service"
+    state: absent
+
+- name: Delete K3s Systemd Node Service
+  file:
+    path: "{{ systemd_dir }}/k3s-node.service"
+    state: absent
+
+- name: Reload Systemd
+  command: systemctl daemon-reload
+
+- name: Collect Still Existing Pod Mountpoints
+  shell: grep /var/lib/rancher/k3s/agent/kubelet/pods/ /proc/mounts | cut -f2 -d' ' | sort -r
+  register: mounts
+
+- name: Umount Still Existing Mountpoints
+  shell: "umount {{ item }}"
+  with_items: "{{ mounts.stdout_lines }}"
+  when: mounts.stdout_lines
+
+- name: Delete K3s Files
+  file:
+    path: /var/lib/rancher/k3s
+    state: absent
+
