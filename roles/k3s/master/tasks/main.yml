@@ -38,3 +38,15 @@
   file:
     path: /var/lib/rancher/k3s/server
     mode: "{{ p.stat.mode }}"
+
+- name: Copy kubeconfig to infra raspi
+  fetch:
+    src: /etc/rancher/k3s/k3s.yaml
+    dest: ~/.kube/config
+    flat: yes
+
+- name: Patch kubeconfig to point to master1
+  replace:
+    dest: ~/.kube/config
+    regexp: 'localhost' 
+    replace: 'master1'

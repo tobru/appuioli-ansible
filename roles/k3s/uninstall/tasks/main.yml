@@ -41,8 +41,13 @@
   with_items: "{{ mounts.stdout_lines }}"
   when: mounts.stdout_lines
 
-- name: Delete K3s Files
+- name: Delete K3s files under /var/lib/rancher/k3s
   file:
     path: /var/lib/rancher/k3s
+    state: absent
+
+- name: Delete K3s files under /etc/rancher/k3s
+  file:
+    path: /etc/rancher/k3s
     state: absent
 

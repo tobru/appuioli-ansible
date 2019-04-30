@@ -1,7 +1,7 @@
-#- hosts: all
-#  name: Configure common stuff
-#  roles:
-#    - common
+- hosts: all
+  name: Configure common stuff
+  roles:
+    - common
 
 - hosts: master:node
   name: Prepare master and nodes
