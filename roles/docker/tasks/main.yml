@@ -33,3 +33,13 @@
     groups: docker
     append: yes
 
+- name: Pre-Pull some images to workaround "no matching manifest for linux/arm64/unknown in the manifest list entries"
+  command: "docker pull --platform arm64 {{ item }}"
+  with_list:
+    - k8s.gcr.io/pause:3.1
+    - coredns/coredns:1.3.0
+    - rancher/klipper-helm:v0.1.5
+    - rancher/klipper-lb:v0.1.1
+    - traefik:1.7.9
+  tags:
+    prepull
