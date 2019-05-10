@@ -51,3 +51,13 @@
     regexp: 'localhost' 
     replace: 'master1'
   connection: local
+
+- name: Install and configure Flux for GitOps in cluster
+  template:
+    src: "flux.yaml.j2"
+    dest: "/var/lib/rancher/k3s/server/manifests/flux.yaml"
+    owner: root
+    group: root
+    mode: 0600
+  tags:
+  - flux
