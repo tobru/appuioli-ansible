@@ -51,3 +51,8 @@
     path: /etc/rancher/k3s
     state: absent
 
+- name: Delete local kubeconfig file
+  file:
+    path: /home/pi/.kube/config
+    state: absent
+  connection: local
