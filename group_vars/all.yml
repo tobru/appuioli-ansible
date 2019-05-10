@@ -1,6 +1,6 @@
 token: adf4zs.ag09j43oy9082nvl
 podnet: 10.244.0.0/16
-kubernetes_version: 1.9*
+kubernetes_version: 1.14*
 phone_home_listen: 2223
 
 k3s_version: v0.5.0
@@ -9,4 +9,5 @@ systemd_dir: /etc/systemd/system
 master_ip: master1
 flux_git_url: git@github.com:appuio/appuioli-gitops.git
 flux_git_branch: master
+flux_image: docker.io/weaveworks/flux:1.12.2
 
