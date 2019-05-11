@@ -33,13 +33,18 @@
     groups: docker
     append: yes
 
+# TODO remove when all OrangePis are upgraded to 4.19 Kernel
 - name: Pre-Pull some images to workaround "no matching manifest for linux/arm64/unknown in the manifest list entries"
   command: "docker pull --platform arm64 {{ item }}"
   with_list:
     - k8s.gcr.io/pause:3.1
-    - coredns/coredns:1.3.0
-    - rancher/klipper-helm:v0.1.5
-    - rancher/klipper-lb:v0.1.1
-    - traefik:1.7.9
+    - docker.io/coredns/coredns:1.3.0
+    - docker.io/rancher/klipper-helm:v0.1.5
+    - docker.io/rancher/klipper-lb:v0.1.1
+    - docker.io/traefik:1.7.9
+    - docker.io/tobru/inlets-arm64:latest
+    - docker.io/tobru/podstalk-arm:latest
+    - docker.io/busybox:1
+    - docker.io/mhutter/podstalk:2019-arm64
   tags:
     prepull

@@ -32,6 +32,11 @@
 - name: Reload Systemd
   command: systemctl daemon-reload
 
+- name: Delete K3s binary
+  file:
+    path: /usr/local/bin/k3s
+    state: absent
+
 - name: Collect Still Existing Pod Mountpoints
   shell: grep /var/lib/rancher/k3s/agent/kubelet/pods/ /proc/mounts | cut -f2 -d' ' | sort -r
   register: mounts
